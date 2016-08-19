@@ -1,0 +1,13 @@
+{
+  "name": "SeleniumTest",
+  "version": "1.0.0",
+  "description": "Selenium test",
+  "author": "Kamil Zakiev",
+  "license": "MIT",
+  "dependencies": {
+    "selenium-webdriver": "^3.0.0-beta-2"
+  },
+  "engines": {
+    "node": ">=5.5.0"
+  }
+}

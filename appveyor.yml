@@ -1,0 +1,39 @@
+# AppVeyor file
+# http://www.appveyor.com/docs/appveyor-yml
+
+# Build version format test
+version: "{build}"
+
+shallow_clone: true
+
+# Fix line endings on Windows
+init:
+  - git config --global core.autocrlf true
+
+# What combinations to test
+environment:
+  nodejs_version: "5.5.0"
+
+install:
+  - ps: Install-Product node $env:nodejs_version x64
+    
+  # installing local npm packages
+  - npm install
+
+build: off
+
+test_script:
+  # Output useful info for debugging.
+  - node --version && npm --version
+  
+  - node runner.js
+
+# scripts to run after tests
+on_finish :
+
+matrix:
+  fast_finish: true
+
+cache:
+  - C:\Users\appveyor\AppData\Roaming\npm-cache -> package.json         # npm cache
+  - node_modules -> package.json                                        # local npm modules
