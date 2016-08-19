@@ -1,13 +1,29 @@
 {
-  "name": "SeleniumTest",
-  "version": "1.0.0",
-  "description": "Selenium test",
-  "author": "Kamil Zakiev",
+  "name": "powerbi-visuals-selenium-tests",
+  "version": "0.0.1",
   "license": "MIT",
+  "author": "Microsoft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/v-kazaki/SeleniumVisualTest.git"
+  },
   "dependencies": {
-    "selenium-webdriver": "^3.0.0-beta-2"
+    "fs": "0.0.2",
+    "gulp": "3.9.1",
+    "gulp-typescript": "2.13.6",
+    "gulp-tslint": "6.0.2",
+    "gulp-clean": "0.3.2",
+    "run-sequence": "^1.2.2",
+    "selenium-standalone": "5.5.0",
+    "webdriverio": "4.2.7",
+    "jasmine-node": "1.14.5",
+    "tslint": "3.14.0",
+    "typescript": "1.8.10"
   },
   "engines": {
     "node": ">=5.5.0"
+  },
+  "devDependencies": {
+
   }
 }
