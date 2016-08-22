@@ -3,10 +3,10 @@
         {
             "name": "AsterPlot",
             "browsers": {
-                "InternetExplorer": true,
-                "Chrome": true,
-                "Firefox": true,
-                "Edge": true
+                "internetExplorer": false,
+                "chrome": true,
+                "firefox": false,
+                "edge": false
             },
             "testFile": "",        
             "reports": {

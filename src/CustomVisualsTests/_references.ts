@@ -26,3 +26,4 @@
 
 import "../Common/_references";
 export {WebDriverIOHelper} from "../Common/WebDriver/WebDriverIOHelper";
+export * from "./config"

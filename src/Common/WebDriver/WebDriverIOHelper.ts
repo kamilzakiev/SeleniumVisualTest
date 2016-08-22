@@ -1,5 +1,4 @@
 ﻿///<reference path="../typedefs/WebDriverIO.d.ts"/>
-//import * as references from "../_references";
 
 export module WebDriverIOHelper {
     (function init() {
@@ -20,15 +19,18 @@ export module WebDriverIOHelper {
         runner.finishCallback = function() {
             let finishCallbackArgs = arguments;
             Q.allSettled(clients.map(c =>  c.endAll())).finally(() => {
-                    if(finishCallback) {
-                        finishCallback.apply(this, finishCallbackArgs);
-                    }
-                });
+                if(finishCallback) {
+                    finishCallback.apply(this, finishCallbackArgs);
+                }
+            });
         };
     })();
 
     export enum Browser {
-        chrome = <any>"chrome"
+        chrome = <any>"chrome",
+        firefox = <any>"firefox",
+        internetExplorer = <any>"internet explorer",
+        edge = <any>"edge"
     }
 
     export function getWebClient(browser: Browser): WebdriverIO.Client<void> {

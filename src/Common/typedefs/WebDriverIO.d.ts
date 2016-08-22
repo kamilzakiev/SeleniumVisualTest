@@ -4,7 +4,7 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 ///<reference path="../../../node_modules/tslint/typings/node/node.d.ts"/>
-/// <reference path="./Q.d.ts"/>
+///<reference path="./Q.d.ts"/>
 
 declare namespace WebdriverIO {
     // EventEmitter
