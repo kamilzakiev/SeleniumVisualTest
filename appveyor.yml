@@ -20,14 +20,13 @@ install:
   # installing local npm packages
   - npm install
 
-build:
-  - gulp build
+build: off
 
 test_script:
   # Output useful info for debugging.
   - node --version && npm --version
   
-  - gulp run
+  - gulp build-run
 
 # scripts to run after tests
 on_finish :
