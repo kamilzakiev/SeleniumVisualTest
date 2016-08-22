@@ -7,10 +7,13 @@
                 "Chrome": true,
                 "Firefox": true,
                 "Edge": true
-            },            
-            "reports": [
-                "https://msit.powerbi.com/view?r=eyJrIjoiZGVmNjUyZmItODIxMC00MzI0LWE4ZDAtNzIxZGY5NzhjZGFlIiwidCI6IjcyZjk4OGJmLTg2ZjEtNDFhZi05MWFiLTJkN2NkMDExZGI0NyIsImMiOjV9"
-            ]
+            },
+            "testFile": "",        
+            "reports": {
+                "dxt": "",
+                "msit": "https://msit.powerbi.com/view?r=eyJrIjoiZGVmNjUyZmItODIxMC00MzI0LWE4ZDAtNzIxZGY5NzhjZGFlIiwidCI6IjcyZjk4OGJmLTg2ZjEtNDFhZi05MWFiLTJkN2NkMDExZGI0NyIsImMiOjV9",
+                "prod": ""
+            }
         }    
     ] 
 }
