@@ -26,7 +26,7 @@ test_script:
   # Output useful info for debugging.
   - node --version && npm --version
   
-  - gulp build-run
+  - node_modules\.bin\gulp build-run
 
 # scripts to run after tests
 on_finish :
