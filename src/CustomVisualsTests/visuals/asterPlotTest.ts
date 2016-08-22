@@ -13,7 +13,7 @@ describe("AsterPlot", () => {
             .then(() => done());
     });
 
-    afterEach((done) => client.end().then(() => done()));
+    afterEach((done) => client.endAll().finally(() => done()));
 
     it("selection test", (done) => {
         const selector = "g.asterSlices";

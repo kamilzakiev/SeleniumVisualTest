@@ -19,7 +19,7 @@ export module WebDriverIOHelper {
 
         runner.finishCallback = function() {
             let finishCallbackArgs = arguments;
-            Q.allSettled(clients.map(c =>  c.endAll())).then(() => {
+            Q.allSettled(clients.map(c =>  c.endAll())).finally(() => {
                     if(finishCallback) {
                         finishCallback.apply(this, finishCallbackArgs);
                     }
