@@ -2,13 +2,12 @@ var gulp = require('gulp');
 var gulpClean = require('gulp-clean');
 var runSequence = require('run-sequence');
 
-function build() {
+function build(projectName) {
     var gulpTypescript = require('gulp-typescript');
     var buildDir = "build/";
 
     return gulp.src(buildDir).pipe(gulpClean())
-        .on("end", () => buildProject("Common")
-            .on("end", () => buildProject("CustomVisualsTests")));
+        .on("end", () => buildProject(projectName));
 
     function buildProject(name) {
         var project = gulpTypescript.createProject("src/" + name + "/tsconfig.json");
@@ -55,8 +54,16 @@ function runTests() {
     });
 }
 
+gulp.task("build:common", () => {
+    return build("Common");
+});
+
+gulp.task("build:test", () => {
+    return build("CustomVisualsTests");
+});
+
 gulp.task("build", () => {
-    return build();
+    return runSequence("build:common", "build:test");
 });
 
 gulp.task("run", () => {
