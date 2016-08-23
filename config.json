@@ -3,9 +3,9 @@
         {
             "name": "AsterPlot",
             "browsers": {
-                "internetExplorer": false,
+                "internetExplorer": true,
                 "chrome": true,
-                "firefox": false,
+                "firefox": true,
                 "edge": false
             },
             "testFile": "./src/CustomVisualTests/visuals/asterPlotTest.ts",        

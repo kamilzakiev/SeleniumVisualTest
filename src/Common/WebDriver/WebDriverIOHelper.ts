@@ -30,7 +30,7 @@ export module WebDriverIOHelper {
         chrome = <any>"chrome",
         firefox = <any>"firefox",
         internetExplorer = <any>"internet explorer",
-        edge = <any>"edge"
+        //edge = <any>"edge"
     }
 
     export function getWebClient(browser: Browser): WebdriverIO.Client<void> {
