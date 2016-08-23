@@ -1,39 +1,61 @@
 var gulp = require('gulp');
 var gulpClean = require('gulp-clean');
 var runSequence = require('run-sequence');
+var selenium = require('selenium-standalone');
+var selenium = require('selenium-standalone');
+var streamConsume = require('stream-consume');
+var mergeStream = require('merge-stream');
 
-function build(projectName) {
-    var gulpTypescript = require('gulp-typescript');
-    var buildDir = "build/";
+function build(name) {
+    return new Promise((done, fail) => {
+        var gulpTypescript = require('gulp-typescript');
+        var srcDir = "src/" + name + "/";
+        var buildDir = "build/" + name + "/";
 
-    return gulp.src(buildDir).pipe(gulpClean())
-        .on("end", () => buildProject(projectName));
+        var cleanStream = gulp.src(buildDir).pipe(gulpClean());
+        cleanStream.on("end", () => {
+            var project = gulpTypescript.createProject(srcDir + "tsconfig.json", { noEmitOnError: false });
+            var buildStream = project.src()
+                .pipe(gulpTypescript(project))
+                .on("error", (e) => fail())
+                .pipe(gulp.dest(buildDir))
+                .on("end", () => done());
 
-    function buildProject(name) {
-        var project = gulpTypescript.createProject("src/" + name + "/tsconfig.json");
-        return project.src()
-            .pipe(gulpTypescript(project))
-            .pipe(gulp.dest(buildDir + name + "/"));
-    }
+            var copyStream = gulp.src(srcDir + "**/*.json")
+                .pipe(gulp.dest(buildDir))
+                .on("error", (e) => fail(e));
+
+            streamConsume(mergeStream(copyStream, buildStream));
+        })
+        .on("error", (e) => fail(e));
+
+        streamConsume(cleanStream);
+    });
 }
 
-function installAndRunSelenium() {
+function installSeleniumServer() {
     return new Promise((done, fail) => {
-        var selenium = require('selenium-standalone');
-        process.on("exit", () => selenium.child && selenium.child.kill());
-
         selenium.install(
             {
                 logger: console.log
             },
             (error) => {
-                if (error) return fail(error);
-                selenium.start((error, child) => {
-                    if (error) return fail(error);
-                    selenium.child = child;
-                    done();
-                });
+                if (error)
+                    return fail(error);
+                else
+                    return done();
             });
+    });
+}
+
+function runSeleniumServer() {
+    return new Promise((done, fail) => {
+        process.on("exit", () => selenium.child && selenium.child.kill());
+        selenium.start((error, child) => {
+            if (error) return fail(error);
+            selenium.child = child;
+            done();
+        });
     });
 }
 
@@ -43,7 +65,7 @@ function runTests() {
 
         jasmine.getEnv().defaultTimeoutInterval = 30000;
         jasmine.executeSpecsInFolder({
-            specFolders: [__dirname + "\\build\\AsterPlot"],
+            specFolders: [__dirname + "\\build\\CustomVisualsTests\\visuals\\"],
             onComplete: (runner, log) => {
                 process.exit(runner.results().failedCount ? 1 : 0);
                 done();
@@ -54,24 +76,22 @@ function runTests() {
     });
 }
 
-gulp.task("build:test", () => {
-    return build("AsterPlot");
+gulp.task("build", () => {
+    return build("Common").then(() => build("CustomVisualsTests"));
 });
 
-gulp.task("build", () => {
-    gulp.task("build:common", () => {
-        return build("Common");
-    });
-    gulp.task("build:customVisualsTests", () => {
-        return build("CustomVisualsTests");
-    });
-    return runSequence("build:common", "build:customVisualsTests", "build:test");
+gulp.task("install-start-selenium", () => {
+    return installSeleniumServer().then(() => runSeleniumServer());
 });
 
 gulp.task("run", () => {
-    return installAndRunSelenium().then(runTests);
+    return runTests();
 });
 
 gulp.task('build-run', () => {
     return runSequence("build", "run");
+});
+
+gulp.task('build-install-run', () => {
+    return runSequence("build", "install-start-selenium", "run");
 });

@@ -1,0 +1,13 @@
+{
+    "browsers": {
+        "internetExplorer": true,
+        "chrome": true,
+        "firefox": true,
+        "edge": false
+    },   
+    "reports": {
+        "dxt": "",
+        "msit": "https://msit.powerbi.com/view?r=eyJrIjoiZGVmNjUyZmItODIxMC00MzI0LWE4ZDAtNzIxZGY5NzhjZGFlIiwidCI6IjcyZjk4OGJmLTg2ZjEtNDFhZi05MWFiLTJkN2NkMDExZGI0NyIsImMiOjV9",
+        "prod": ""
+    }
+}

@@ -1,9 +1,8 @@
-import * as references from "../CustomVisualsTests/_references";
+import * as references from "../../_references";
 
-references.config.getSpecsForVisual("AsterPlot", (name, browser, reportUrl) => {
-    describe(name + " - " + browser, () => {
+references.config.getSpecs(__dirname, (browser, reportUrl) => {
+    describe("AsterPlot - " + browser, () => {
         let client: WebdriverIO.Client<void>;
-
         beforeEach((done) => {
             client = references.WebDriverIOHelper.getWebClient(browser);
             client

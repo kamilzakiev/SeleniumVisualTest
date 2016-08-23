@@ -3,7 +3,6 @@ import * as fs from "fs";
 
 export module config {
     export interface VisualTestConfig {
-        name: string;
         browsers: {
             internetExplorer: boolean;
             chrome: boolean;
@@ -17,23 +16,17 @@ export module config {
         }
     }
 
-    export let tests: VisualTestConfig[] = [];
-
-    (function init() {
-        let json = fs.readFileSync("./config.json", "utf8");
+    export function readFromDirectory(configPath: string) {
+        let json = fs.readFileSync(configPath + "/config.json", "utf8");
         let config = JSON.parse(json);
-        (<any[]>config.tests).forEach(x => tests.push(x));
-    })();
-
-    export function getVisualTestByName(name: string) {
-        return tests.filter(x => x.name.toLowerCase() === name.toLowerCase())[0];
+        return <VisualTestConfig>config;
     }
 
-    export function getSpecsForVisual(
-        name: string,
-        specs: (name: string, browser: references.WebDriverIOHelper.Browser, reportUrl: string) => void): () => void {
+    export function getSpecs(
+        configPath: string,
+        specs: (browser: references.WebDriverIOHelper.Browser, reportUrl: string) => void): () => void {
 
-        let visualTestConfig = getVisualTestByName(name);
+        let visualTestConfig = readFromDirectory(configPath);
         if(!visualTestConfig || !visualTestConfig.browsers || !visualTestConfig.reports) {
             return;
         }
@@ -45,9 +38,7 @@ export module config {
                     continue;
                 }
 
-                console.log(`Added spec for visual: '${name}', browser: '${browser}', report: '${reportKey}'.`); 
-
-                specs(name, browser, url);
+                specs(browser, url);
             }
         }
 
@@ -59,7 +50,7 @@ export module config {
                         case "chrome": return references.WebDriverIOHelper.Browser.chrome;
                         case "firefox": return references.WebDriverIOHelper.Browser.firefox;
                         case "internetExplorer": return references.WebDriverIOHelper.Browser.internetExplorer;
-                        case "edge": return references.WebDriverIOHelper.Browser.edge;
+                        //case "edge": return references.WebDriverIOHelper.Browser.edge;
                     }
                 });
         }

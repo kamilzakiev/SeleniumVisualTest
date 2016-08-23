@@ -14,6 +14,8 @@
     "gulp-tslint": "6.0.2",
     "gulp-clean": "0.3.2",
     "run-sequence": "^1.2.2",
+    "merge-stream": "1.0.0",
+    "stream-consume": "0.1.0",
     "selenium-standalone": "5.5.0",
     "webdriverio": "4.2.7",
     "jasmine-node": "1.14.5",
