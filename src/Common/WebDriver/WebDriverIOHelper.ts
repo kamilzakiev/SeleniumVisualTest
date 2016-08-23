@@ -1,6 +1,6 @@
 ﻿///<reference path="../typedefs/WebDriverIO.d.ts"/>
 
-export module WebDriverIOHelper {
+export module webDriverIOHelper {
     (function init() {
         let clients: WebdriverIO.Client<void>[] = [];
 

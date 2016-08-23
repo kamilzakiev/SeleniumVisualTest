@@ -25,7 +25,10 @@
  */
 
 ///<reference path="../../node_modules/tslint/typings/node/node.d.ts"/>
+///<reference path="./typedefs/typedefs.d.ts"/>
 ///<reference path="../Common/typedefs/jasmine.d.ts"/>
 ///<reference path="./typedefs/Q.d.ts"/>
 
 (<any>global).Q = require("q");
+
+export * from "./Helpers/helpers";

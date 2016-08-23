@@ -24,6 +24,6 @@
  *  THE SOFTWARE.
  */
 
-import "../Common/_references";
-export {WebDriverIOHelper} from "../Common/WebDriver/WebDriverIOHelper";
+export * from "../Common/_references";
+export {webDriverIOHelper} from "../Common/WebDriver/WebDriverIOHelper";
 export * from "./config"

@@ -1,5 +1,6 @@
 ﻿import * as references from "./_references";
 import * as fs from "fs";
+import Browser = references.webDriverIOHelper.Browser;
 
 export module config {
     export interface VisualTestConfig {
@@ -24,7 +25,7 @@ export module config {
 
     export function getSpecs(
         configPath: string,
-        specs: (browser: references.WebDriverIOHelper.Browser, reportUrl: string) => void): () => void {
+        specs: (browser: Browser, reportUrl: string) => void): () => void {
 
         let visualTestConfig = readFromDirectory(configPath);
         if(!visualTestConfig || !visualTestConfig.browsers || !visualTestConfig.reports) {
@@ -43,13 +44,17 @@ export module config {
         }
 
         function getBrowserList(visualTestConfig: VisualTestConfig) {
+            if(!references.helpers.isAppveyor()) {
+                return [Browser.chrome];
+            }
+
             return Object.keys(visualTestConfig.browsers)
                 .filter(key => visualTestConfig.browsers[key])
                 .map(key => {
                     switch(key) {
-                        case "chrome": return references.WebDriverIOHelper.Browser.chrome;
-                        case "firefox": return references.WebDriverIOHelper.Browser.firefox;
-                        case "internetExplorer": return references.WebDriverIOHelper.Browser.internetExplorer;
+                        case "chrome": return Browser.chrome;
+                        case "firefox": return Browser.firefox;
+                        case "internetExplorer": return Browser.internetExplorer;
                         //case "edge": return references.WebDriverIOHelper.Browser.edge;
                     }
                 });

@@ -4,7 +4,7 @@ references.config.getSpecs(__dirname, (browser, reportUrl) => {
     describe("AsterPlot - " + browser, () => {
         let client: WebdriverIO.Client<void>;
         beforeEach((done) => {
-            client = references.WebDriverIOHelper.getWebClient(browser);
+            client = references.webDriverIOHelper.getWebClient(browser);
             client
                 .init()
                 .url(reportUrl)
