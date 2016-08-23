@@ -22,7 +22,8 @@
     "jasmine-node": "1.14.5",
     "tslint": "3.14.0",
     "typescript": "1.8.10",
-    "q": "1.4.1"
+    "q": "1.4.1",
+    "lodash": "4.15.0"
   },
   "engines": {
     "node": ">=5.5.0"

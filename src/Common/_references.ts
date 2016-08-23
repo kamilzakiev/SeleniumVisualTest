@@ -28,7 +28,9 @@
 ///<reference path="./typedefs/typedefs.d.ts"/>
 ///<reference path="../Common/typedefs/jasmine.d.ts"/>
 ///<reference path="./typedefs/Q.d.ts"/>
+///<reference path="./typedefs/lodash.d.ts"/>
 
 (<any>global).Q = require("q");
+(<any>global)._ = require("lodash");
 
 export * from "./Helpers/helpers";

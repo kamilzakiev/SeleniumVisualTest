@@ -7,7 +7,7 @@
     },   
     "reports": {
         "dxt": "",
-        "msit": "https://msit.powerbi.com/view?r=eyJrIjoiZGVmNjUyZmItODIxMC00MzI0LWE4ZDAtNzIxZGY5NzhjZGFlIiwidCI6IjcyZjk4OGJmLTg2ZjEtNDFhZi05MWFiLTJkN2NkMDExZGI0NyIsImMiOjV9",
-        "prod": ""
+        "msit": "",
+        "prod": "https://app.powerbi.com/view?r=eyJrIjoiNTc1NWJhOGQtNjQwNy00YTlkLThjZjEtNWM1MWYyMjgxMjIxIiwidCI6IjM3MjQ4MTdmLTU1YzktNDEzOC05M2Y4LTg2N2EzNTAzYmYxMSIsImMiOjZ9"
     }
 }

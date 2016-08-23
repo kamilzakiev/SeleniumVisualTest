@@ -25,5 +25,5 @@
  */
 
 export * from "../Common/_references";
-export {webDriverIOHelper} from "../Common/WebDriver/WebDriverIOHelper";
+export * from "../Common/WebDriver/WebDriverIOHelpers";
 export * from "./config"

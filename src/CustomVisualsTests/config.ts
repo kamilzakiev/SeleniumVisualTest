@@ -1,6 +1,6 @@
-﻿import * as references from "./_references";
+﻿import {webdriverIOHelpers, helpers} from "./_references";
+import Browser = webdriverIOHelpers.Browser;
 import * as fs from "fs";
-import Browser = references.webDriverIOHelper.Browser;
 
 export module config {
     export interface VisualTestConfig {
@@ -9,7 +9,7 @@ export module config {
             chrome: boolean;
             firefox: boolean;
             edge: boolean;
-        };            
+        };
         reports: {
             dxt: string,
             msit: string,
@@ -27,24 +27,29 @@ export module config {
         configPath: string,
         specs: (browser: Browser, reportUrl: string) => void): () => void {
 
-        let visualTestConfig = readFromDirectory(configPath);
-        if(!visualTestConfig || !visualTestConfig.browsers || !visualTestConfig.reports) {
-            return;
-        }
-
-        for(let browser of getBrowserList(visualTestConfig)) {
-            for(let reportKey in visualTestConfig.reports) {
-                let url = visualTestConfig.reports[reportKey];
-                if(!url) {
-                    continue;
-                }
-
-                specs(browser, url);
+        return () => {
+            let visualTestConfig = readFromDirectory(configPath);
+            if(!visualTestConfig || !visualTestConfig.browsers || !visualTestConfig.reports) {
+                return;
             }
-        }
+
+            for(let browser of getBrowserList(visualTestConfig)) {
+
+                describe(browser.toString(), () => {
+                    for(let reportKey in visualTestConfig.reports) {
+                        let url = visualTestConfig.reports[reportKey];
+                        if(!url) continue;
+
+                        describe(reportKey, () => {
+                            specs(browser, url)
+                        });
+                    }
+                });
+            }
+        };
 
         function getBrowserList(visualTestConfig: VisualTestConfig) {
-            if(!references.helpers.isAppveyor()) {
+            if(!helpers.isAppveyor()) {
                 return [Browser.chrome];
             }
 
