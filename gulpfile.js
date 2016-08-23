@@ -43,7 +43,7 @@ function runTests() {
 
         jasmine.getEnv().defaultTimeoutInterval = 30000;
         jasmine.executeSpecsInFolder({
-            specFolders: [__dirname + "\\build\\CustomVisualsTests\\visuals"],
+            specFolders: [__dirname + "\\build\\AsterPlot"],
             onComplete: (runner, log) => {
                 process.exit(runner.results().failedCount ? 1 : 0);
                 done();
@@ -54,16 +54,18 @@ function runTests() {
     });
 }
 
-gulp.task("build:common", () => {
-    return build("Common");
-});
-
 gulp.task("build:test", () => {
-    return build("CustomVisualsTests");
+    return build("AsterPlot");
 });
 
 gulp.task("build", () => {
-    return runSequence("build:common", "build:test");
+    gulp.task("build:common", () => {
+        return build("Common");
+    });
+    gulp.task("build:customVisualsTests", () => {
+        return build("CustomVisualsTests");
+    });
+    return runSequence("build:common", "build:customVisualsTests", "build:test");
 });
 
 gulp.task("run", () => {

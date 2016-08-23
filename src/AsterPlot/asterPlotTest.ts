@@ -1,4 +1,4 @@
-import * as references from "../_references";
+import * as references from "../CustomVisualsTests/_references";
 
 references.config.getSpecsForVisual("AsterPlot", (name, browser, reportUrl) => {
     describe(name + " - " + browser, () => {
