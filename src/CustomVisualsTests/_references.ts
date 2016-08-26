@@ -23,7 +23,9 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+///<reference path="../Common/ClientModules/helpers.ts"/>
 
 export * from "../Common/_references";
 export * from "../Common/WebDriver/WebDriverIOHelpers";
 export * from "./config"
+export * from "../Common/WebDriver/webdriverIOClientModule";

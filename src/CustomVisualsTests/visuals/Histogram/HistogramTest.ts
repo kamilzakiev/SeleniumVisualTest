@@ -1,39 +1,38 @@
-import {WebdriverIO, webdriverIOHelpers, config} from "../../_references";
+import {WebdriverIO, webdriverIOHelpers, config, webdriverIOClientModule} from "../../_references";
 
 describe("Histogram", config.getSpecs(__dirname, (browser, reportUrl) => {
     let client: WebdriverIO.Client<void>;
+    let clientModule: webdriverIOClientModule = new webdriverIOClientModule([__dirname + "/helpers.js"], function() {
+    });
+
     beforeEach((done) => {
         client = webdriverIOHelpers.getWebClient(browser);
         client
-            .init()
             .url(reportUrl)
-            .waitForVisible("svg.histogram")
+            .waitForVisible("svg.histogram g.columns > *")
             .then(() => done());
     });
 
     afterEach((done) => client.endAll().finally(() => done()));
 
     it("selection test", (done) => {
-        const selector = "svg.histogram g.columns";
+        client.call(clientModule.execSpec(function (done) {
+            var visual = new clientModules.Histogram();
+            clientModules.helpers.clickElement(visual.columnRects.eq(0), true);
 
-        client
-            .waitForVisible(selector)
-            .call(webdriverIOHelpers.click(selector + " :nth-child(1)"))
-            .getCssProperty(selector + " :nth-child(n + 0)", 'fill-opacity')
-            .then((elements: WebdriverIO.CssProperty[]) => {
-                elements.forEach((e,i) => {
-                    if(i >= 1) {
-                        expect(parseFloat(e.value)).toBeLessThan(1);
-                    } else {
-                        expect(parseFloat(e.value)).toBe(1);
-                    }
-                });
-            })
-            .pause(1000)
-            .call(webdriverIOHelpers.getTextWithoutChild("svg.card > g > text.value"))
-            .then(e => {
-                expect(e).toBe("7");
-                done();
+            visual.columnRects.toArray().map($).forEach((e,i) => {
+                if(i >= 1) {
+                    expect(parseFloat(e.css('fill-opacity'))).toBeLessThan(1);
+                } else {
+                    expect(parseFloat(e.css('fill-opacity'))).toBe(1);
+                }
             });
+
+            setTimeout(() => {
+                expect(clientModules.helpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("7");
+                done();
+            }, 500);
+        }))
+        .then(() => done());
     });
 }));

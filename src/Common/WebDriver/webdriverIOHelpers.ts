@@ -1,7 +1,6 @@
 ﻿///<reference path="../typedefs/WebDriverIO.d.ts"/>
-import * as WebdriverIO from "webdriverio";
-export {WebdriverIO};
-import {getJsWebdriverIOHelpers} from "./JSWebdriverIOHelpers";
+import {jasmineHelpers} from "../jasmine/jasmineHelpers";
+import * as WebdriverIO from "webdriverio"; export {WebdriverIO};
 
 export module webdriverIOHelpers {
     (function init() {
@@ -93,28 +92,17 @@ export module webdriverIOHelpers {
     }
 
     export function getWebClient(browser: Browser) {
-        let client = WebdriverIO.remote({ desiredCapabilities: { browserName: browser }, waitforTimeout: 30000 });
+        let timeout = jasmineHelpers.getDefaultTimeoutInterval();
+
+        let client = WebdriverIO.remote({ desiredCapabilities: { browserName: browser }, waitforTimeout: timeout })
+            .init()
+            .timeouts("script", timeout)
+            .timeouts("page load", timeout)
+            .timeouts("implicit", timeout)
+            .timeoutsAsyncScript(timeout)
+            .timeoutsImplicitWait(timeout);
+
         return client;
-    }
-
-    export function getTextWithoutChild(selector: string): () => any {
-        return function() {
-            let client = <WebdriverIO.Client<void>>this;
-            return client.selectorExecute(selector, function(element: HTMLElement[]) {
-                return element[0].childNodes[0].textContent;
-            });
-        };
-    }
-
-    export function click(selector: string, ctrlKey?: boolean): () => any {
-        return function() {
-            let client = <WebdriverIO.Client<void>>this;
-            return client.selectorExecute(selector,
-                function(element: HTMLElement[], getHelpers: typeof getJsWebdriverIOHelpers, ctrlKey: boolean) {
-                    var event = getHelpers().getMouseEvent("click", { ctrlKey: ctrlKey });
-                    return element[0].dispatchEvent(event);
-                }, getJsWebdriverIOHelpers, ctrlKey);
-        };
     }
 }
 
