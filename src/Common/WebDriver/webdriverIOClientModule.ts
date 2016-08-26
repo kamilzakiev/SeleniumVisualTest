@@ -52,7 +52,7 @@ export class webdriverIOClientModule {
                         });
 
                         specExecutionResult.consoleMessages.forEach(m => {
-                            m.message = "WebDriver Client: " + m.message;
+                            m.message = getCurrentSpecText(m.message, true);
                             switch(m.type) {
                                 case "log": return console.log(m.message);
                                 case "error": return console.error(Chalk.red(m.message));
@@ -66,6 +66,10 @@ export class webdriverIOClientModule {
                     throw err;
                 });
             });
+
+        function getCurrentSpecText(text: string, isClient?: boolean) {
+            return `${jasmine.getEnv().currentSpec.getFullName()}${isClient ? " (client)" : ""}: ${text}`
+        }
     }
 
     private getFailedExpectations(specExecutionResult: SpecExecutionResult) {

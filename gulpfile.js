@@ -59,7 +59,7 @@ function runSeleniumServer() {
     });
 }
 
-function runTests() {
+function runTests(fileFilter) {
     return new Promise((done) => {
         var jasmine = require('jasmine-node');
 
@@ -71,9 +71,15 @@ function runTests() {
                 done();
             },
             isVerbose: true,
-            showColors: true
+            showColors: true,
+            regExpSpec: new RegExp(fileFilter, "i")
         });
     });
+}
+
+function getArgsValue(name) {
+    var keyValue = process.argv.filter(x => x.split("=")[0].trim().toLowerCase() === name)[0];
+    return keyValue && (keyValue.indexOf("=") > 0 ? keyValue.split("=")[1] : "");
 }
 
 gulp.task("build", () => {
@@ -85,7 +91,7 @@ gulp.task("install-start-selenium", () => {
 });
 
 gulp.task("run", () => {
-    return runTests();
+    return runTests(getArgsValue("--file"));
 });
 
 gulp.task('build-run', () => {
