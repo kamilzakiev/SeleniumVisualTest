@@ -5,7 +5,7 @@ describe("ChicletSlicer", config.getSpecs(__dirname, (browser, reportUrl) => {
     let clientModule: webdriverIOClientModule = new webdriverIOClientModule([__dirname + "/helpers.js"], function() {
     });
     let itClient = clientModule.getItClient(() => client), xitClient = clientModule.getXitClient(() => client);
-    
+
     beforeEach((done) => {
         client = webdriverIOHelpers.getWebClient(browser);
         client

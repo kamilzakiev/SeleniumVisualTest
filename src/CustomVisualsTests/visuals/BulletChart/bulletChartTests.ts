@@ -1,11 +1,11 @@
 import {WebdriverIO, webdriverIOHelpers, config, webdriverIOClientModule} from "../../_references";
 
-describe("AsterPlot", config.getSpecs(__dirname, (browser, reportUrl) => {
+describe("BulletChart", config.getSpecs(__dirname, (browser, reportUrl) => {
     let client: WebdriverIO.Client<void>;
     let clientModule: webdriverIOClientModule = new webdriverIOClientModule([__dirname + "/helpers.js"], function() {
     });
     let itClient = clientModule.getItClient(() => client), xitClient = clientModule.getXitClient(() => client);
-    
+
     beforeEach((done) => {
         client = webdriverIOHelpers.getWebClient(browser);
         client
