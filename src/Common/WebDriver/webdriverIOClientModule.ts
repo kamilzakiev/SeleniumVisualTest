@@ -72,6 +72,21 @@ export class webdriverIOClientModule {
         }
     }
 
+    public getItClient(getClient: () => WebdriverIO.Client<void>) {
+        return this.getJasmineSpecMethod(it, getClient);
+    }
+
+    public getXitClient(getClient: () => WebdriverIO.Client<void>) {
+        return this.getJasmineSpecMethod(xit, getClient);
+    }
+
+    private getJasmineSpecMethod(
+        method: (expectation: string, assertion?: (done: () => void) => void, timeout?: number) => void,
+        getClient: () => WebdriverIO.Client<void>) {
+        return (expectation: string, assertion?: (done: () => void) => void | (() => void), timeout?: number) =>
+             method(expectation, done => getClient().call(this.execSpec(assertion, timeout)).then(() => done()), timeout);
+    }
+
     private getFailedExpectations(specExecutionResult: SpecExecutionResult) {
         return specExecutionResult.failedExpectations.map(e => {
                 let result: jasmine.ExpectationResult = {

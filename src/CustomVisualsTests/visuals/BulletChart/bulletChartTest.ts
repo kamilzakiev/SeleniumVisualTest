@@ -4,6 +4,7 @@ describe("AsterPlot", config.getSpecs(__dirname, (browser, reportUrl) => {
     let client: WebdriverIO.Client<void>;
     let clientModule: webdriverIOClientModule = new webdriverIOClientModule([__dirname + "/helpers.js"], function() {
     });
+    let itClient = clientModule.getItClient(() => client), xitClient = clientModule.getXitClient(() => client);
     
     beforeEach((done) => {
         client = webdriverIOHelpers.getWebClient(browser);
@@ -15,26 +16,23 @@ describe("AsterPlot", config.getSpecs(__dirname, (browser, reportUrl) => {
 
     afterEach((done) => client.endAll().finally(() => done()));
 
-    it("selection test", (done) => {
-        client.call(clientModule.execSpec(function (done) {
-            var visual = new clientModules.BulletChart();
+    itClient("selection test", function (done) {
+        var visual = new clientModules.BulletChart();
 
-            clientModules.helpers.clickElement(visual.rangeRectsGrouped[0].first());
-            clientModules.helpers.clickElement(visual.rangeRectsGrouped[1].first(), true);
+        clientModules.helpers.clickElement(visual.rangeRectsGrouped[0].first());
+        clientModules.helpers.clickElement(visual.rangeRectsGrouped[1].first(), true);
 
-            visual.rangeRectsGrouped.map(e => e.first()).forEach((e,i) => {
-                if(i >= 2) {
-                    expect(parseFloat(e.css('opacity'))).toBeLessThan(1);
-                } else {
-                    expect(parseFloat(e.css('opacity'))).toBe(1);
-                }
-            });
+        visual.rangeRectsGrouped.map(e => e.first()).forEach((e,i) => {
+            if(i >= 2) {
+                expect(parseFloat(e.css('opacity'))).toBeLessThan(1);
+            } else {
+                expect(parseFloat(e.css('opacity'))).toBe(1);
+            }
+        });
 
-            setTimeout(() => {
-                expect(clientModules.helpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("222K");
-                done();
-            }, 500);
-        }))
-        .then(() => done());
+        setTimeout(() => {
+            expect(clientModules.helpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("222K");
+            done();
+        }, 500);
     });
 }));
