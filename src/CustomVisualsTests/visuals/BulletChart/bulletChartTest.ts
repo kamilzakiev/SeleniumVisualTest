@@ -17,10 +17,10 @@ describe("AsterPlot", config.getSpecs(__dirname, (browser, reportUrl) => {
     afterEach((done) => client.endAll().finally(() => done()));
 
     itClient("selection test", function (done) {
-        var visual = new clientModules.BulletChart();
+        var visual = new clientVisuals.BulletChart();
 
-        clientModules.helpers.clickElement(visual.rangeRectsGrouped[0].first());
-        clientModules.helpers.clickElement(visual.rangeRectsGrouped[1].first(), true);
+        clientHelpers.clickElement(visual.rangeRectsGrouped[0].first());
+        clientHelpers.clickElement(visual.rangeRectsGrouped[1].first(), true);
 
         visual.rangeRectsGrouped.map(e => e.first()).forEach((e,i) => {
             if(i >= 2) {
@@ -31,7 +31,7 @@ describe("AsterPlot", config.getSpecs(__dirname, (browser, reportUrl) => {
         });
 
         setTimeout(() => {
-            expect(clientModules.helpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("222K");
+            expect(clientHelpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("222K");
             done();
         }, 500);
     });

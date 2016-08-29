@@ -17,9 +17,9 @@ describe("AsterPlot", config.getSpecs(__dirname, (browser, reportUrl) => {
     afterEach((done) => client.endAll().finally(() => done()));
 
     itClient("selection test", function (done) {
-        var visual = new clientModules.AsterPlot();
-        clientModules.helpers.clickElement(visual.slices.eq(0), true);
-        clientModules.helpers.clickElement(visual.slices.eq(1), true);
+        var visual = new clientVisuals.AsterPlot();
+        clientHelpers.clickElement(visual.slices.eq(0), true);
+        clientHelpers.clickElement(visual.slices.eq(1), true);
 
         visual.slices.toArray().map($).forEach((e,i) => {
             if(i >= 2) {
@@ -30,7 +30,7 @@ describe("AsterPlot", config.getSpecs(__dirname, (browser, reportUrl) => {
         });
 
         setTimeout(() => {
-            expect(clientModules.helpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("2.47K");
+            expect(clientHelpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("2.47K");
             done();
         }, 500);
     });

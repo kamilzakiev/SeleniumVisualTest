@@ -1,9 +1,9 @@
-﻿namespace clientModules {
+﻿namespace clientVisuals {
 	export class AsterPlot {
         private rootElementValue: JQuery;
 
 		constructor(element?: JQuery) {
-            this.rootElementValue = (element || helpers.getVisualsRootElements()).find("svg.asterPlot").parent();
+            this.rootElementValue = (element || clientHelpers.getVisualsRootElements()).find("svg.asterPlot").parent();
 		}
 
 		public get rootElement() {

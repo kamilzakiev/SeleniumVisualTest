@@ -1,9 +1,9 @@
-﻿namespace clientModules {
+﻿namespace clientVisuals {
 	export class Histogram {
         private rootElementValue: JQuery;
 
 		constructor(element?: JQuery) {
-            this.rootElementValue = (element || helpers.getVisualsRootElements()).find("svg.histogram").parent();
+            this.rootElementValue = (element || clientHelpers.getVisualsRootElements()).find("svg.histogram").parent();
 		}
 
 		public get rootElement() {

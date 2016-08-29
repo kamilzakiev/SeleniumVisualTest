@@ -17,8 +17,8 @@ describe("Histogram", config.getSpecs(__dirname, (browser, reportUrl) => {
     afterEach((done) => client.endAll().finally(() => done()));
 
     itClient("selection test", function (done) {
-        var visual = new clientModules.Histogram();
-        clientModules.helpers.clickElement(visual.columnRects.eq(0), true);
+        var visual = new clientVisuals.Histogram();
+        clientHelpers.clickElement(visual.columnRects.eq(0), true);
 
         visual.columnRects.toArray().map($).forEach((e,i) => {
             if(i >= 1) {
@@ -29,7 +29,7 @@ describe("Histogram", config.getSpecs(__dirname, (browser, reportUrl) => {
         });
 
         setTimeout(() => {
-            expect(clientModules.helpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("7");
+            expect(clientHelpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("7");
             done();
         }, 500);
     });

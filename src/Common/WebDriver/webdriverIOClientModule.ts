@@ -18,7 +18,9 @@ export class webdriverIOClientModule {
 
         this.specInitFunction = specInitFunction;
         this.modules = <any>modules || [];
-        this.modules.unshift(path.join(__dirname, "../ClientModules/helpers.js"));
+
+        const commonModules = ["../ClientModules/helpers.js", "../ClientModules/colorHelpers.js"];
+        commonModules.reverse().forEach(x => this.modules.unshift(path.join(__dirname, x)));
     }
 
     public execSpec<T>(assertion: (done: () => void) => void | (() => void), timeout?: number) {
