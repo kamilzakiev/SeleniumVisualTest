@@ -1,9 +1,5 @@
 ﻿namespace clientHelpers {
     export function getMouseEvent(type: string, options: MouseEventInit) {
-        if (typeof MouseEvent === 'function') {
-            return new MouseEvent(type, options);
-        }
-
         var event = document.createEvent('MouseEvents');
         event.initMouseEvent(
                 type,
@@ -26,32 +22,21 @@
         return event;
     }
 
-    export function clickElement(element: HTMLElement | JQuery, ctrlKey?: boolean) {
-        var htmlElement = getHtmlElementsFromObject(element)[0];
-
+    export function clickElement(anyElement: HTMLElement | JQuery, ctrlKey?: boolean) {
+        var element = $(anyElement);
         var event = getMouseEvent("click", {
                 ctrlKey: ctrlKey,
-                clientX: htmlElement.getBoundingClientRect().width / 2,
-                clientY: htmlElement.getBoundingClientRect().height / 2
+                clientX: element.offset().left + element.outerWidth() / 2,
+                clientY: element.offset().top + element.outerHeight() / 2
             });
-        if(htmlElement) {
-            htmlElement.dispatchEvent(event);
-        }
+        return element.toArray().map((e: HTMLElement) => e.dispatchEvent(event));
     }
 
     export function getVisualsRootElements() {
         return $("div.vcBody > div.visual");
     }
 
-    export function getTextWithoutChild(element: HTMLElement | JQuery) {
-        return  getHtmlElementsFromObject(element)[0].childNodes[0].textContent;
-    }
-
-    function getHtmlElementsFromObject(element: HTMLElement | HTMLElement[] | JQuery): HTMLElement[] {
-        if(element instanceof jQuery || 'jquery' in Object(element)) {
-            return (<JQuery>element).toArray();
-        } else {
-            return _.isArray(element) ? <HTMLElement[]>element : [<HTMLElement>element];
-        }
+    export function getTextWithoutChild(anyElement: HTMLElement | JQuery) {
+        return  $(anyElement)[0].childNodes[0].textContent;
     }
 }
