@@ -27,8 +27,13 @@
     }
 
     export function clickElement(element: HTMLElement | JQuery, ctrlKey?: boolean) {
-        var event = getMouseEvent("click", { ctrlKey: ctrlKey });
-        var htmlElement = getHtmlElementFromObject(element);
+        var htmlElement = getHtmlElementsFromObject(element)[0];
+
+        var event = getMouseEvent("click", {
+                ctrlKey: ctrlKey,
+                clientX: htmlElement.getBoundingClientRect().width / 2,
+                clientY: htmlElement.getBoundingClientRect().height / 2
+            });
         if(htmlElement) {
             htmlElement.dispatchEvent(event);
         }
@@ -39,14 +44,14 @@
     }
 
     export function getTextWithoutChild(element: HTMLElement | JQuery) {
-        return  getHtmlElementFromObject(element).childNodes[0].textContent;
+        return  getHtmlElementsFromObject(element)[0].childNodes[0].textContent;
     }
 
-    function getHtmlElementFromObject(element: HTMLElement | JQuery): HTMLElement {
+    function getHtmlElementsFromObject(element: HTMLElement | HTMLElement[] | JQuery): HTMLElement[] {
         if(element instanceof jQuery || 'jquery' in Object(element)) {
-            return (<JQuery>element).get(0);
+            return (<JQuery>element).toArray();
         } else {
-            return <HTMLElement>element;
+            return _.isArray(element) ? <HTMLElement[]>element : [<HTMLElement>element];
         }
     }
 }

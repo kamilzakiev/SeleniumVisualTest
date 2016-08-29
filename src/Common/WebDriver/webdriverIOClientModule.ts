@@ -117,7 +117,7 @@ export class webdriverIOClientModule {
             var consoleFunctions = consoleFnNames.map(n => <Function>window.console[n]);
 
             consoleFnNames.forEach((type, i) => window.console[type] = function(message) {
-                specExecutionResult.consoleMessages.push({type: type, message: message });
+                specExecutionResult.consoleMessages.push({type: type, message: message && message.toString() });
                 return consoleFunctions[i].apply(window.console, arguments);
             });
 
