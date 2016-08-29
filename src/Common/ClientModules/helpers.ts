@@ -37,6 +37,6 @@
     }
 
     export function getTextWithoutChild(anyElement: HTMLElement | JQuery) {
-        return  $(anyElement)[0].childNodes[0].textContent;
+        return $(anyElement)[0].childNodes[0].textContent;
     }
 }

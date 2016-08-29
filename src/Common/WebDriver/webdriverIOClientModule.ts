@@ -28,13 +28,13 @@ export class webdriverIOClientModule {
             return client
                 .execute("return window.jasmineRequire").then(jasmineRequire => {
                     if(!jasmineRequire.value) {
-                        return client.execute(function(code) { eval(code); }, jasmineHelpers.getJasmineCoreJs());//load jasmine
+                        return client
+                            .execute(function(code) { eval(code); }, jasmineHelpers.getJasmineCoreJs())//load jasmine core
+                            .catch(err => { throw "Spec execution: There is an error loading jasmine"; });
                     }
-                }).catch(err => {
-                    throw "Spec execution: There is an error loading jasmine";
                 })
-                .execute(this.getJasmineBootJs(), jasmineHelpers.getDefaultTimeoutInterval())//run jasmine
-
+                .execute(this.getJasmineBootJs(), jasmineHelpers.getDefaultTimeoutInterval())//init jasmine
+                .execute(function(code) { eval(code); }, jasmineHelpers.getJasmineJQueryJs())//load jasmine jquery
                 .executeAsync(//execute spec
                     this.addSpec(),
                     this.specInitFunction ? this.specInitFunction.toString() : "",
@@ -42,7 +42,6 @@ export class webdriverIOClientModule {
                     timeout,
                     jasmine.getEnv().currentSpec.getFullName(),
                     this.getLoadedModules())
-
                 .then((result: any) => {
                     try {
                         let specExecutionResult = <SpecExecutionResult>JSON.parse(result.value);//parse results

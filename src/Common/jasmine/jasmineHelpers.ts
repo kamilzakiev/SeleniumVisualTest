@@ -8,4 +8,8 @@ export module jasmineHelpers {
     export function getJasmineCoreJs() {
         return fs.readFileSync(__dirname.replace("\\","/") + "/../../../node_modules/jasmine-core/lib/jasmine-core/jasmine.js", "utf8");
     }
+
+    export function getJasmineJQueryJs() {
+        return fs.readFileSync(__dirname.replace("\\","/") + "/../../../node_modules/jasmine-jquery/lib/jasmine-jquery.js", "utf8");
+    }
 }

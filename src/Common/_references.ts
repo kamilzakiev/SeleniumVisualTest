@@ -27,6 +27,7 @@
 ///<reference path="../../node_modules/tslint/typings/node/node.d.ts"/>
 ///<reference path="./typedefs/typedefs.d.ts"/>
 ///<reference path="../Common/typedefs/jasmine.d.ts"/>
+///<reference path="../Common/typedefs/jasmine-jquery.d.ts"/>
 ///<reference path="./typedefs/Q.d.ts"/>
 ///<reference path="./typedefs/chalk.d.ts"/>
 ///<reference path="./typedefs/lodash.d.ts"/>
