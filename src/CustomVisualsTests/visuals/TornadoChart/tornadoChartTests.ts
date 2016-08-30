@@ -1,6 +1,6 @@
-import {WebdriverIO, webdriverIOHelpers, config, webdriverIOClientModule} from "../../_references";
+import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule} from "../../_references";
 
-describe("TornadoChart", config.getSpecs(__dirname, (browser, reportUrl) => {
+describe("TornadoChart", visualConfig.getSpecs(__dirname, (browser, reportUrl) => {
     let client: WebdriverIO.Client<void>;
     let clientModule: webdriverIOClientModule = new webdriverIOClientModule([__dirname + "/helpers.js"], function() {
     });

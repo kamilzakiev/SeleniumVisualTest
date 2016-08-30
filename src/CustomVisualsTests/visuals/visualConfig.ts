@@ -1,8 +1,8 @@
-﻿import {webdriverIOHelpers, helpers} from "./_references";
+﻿import {webdriverIOHelpers, helpers} from "../_references";
 import Browser = webdriverIOHelpers.Browser;
 import * as fs from "fs";
 
-export module config {
+export module visualConfig {
     export interface VisualTestConfig {
         browsers: {
             internetExplorer: boolean;
