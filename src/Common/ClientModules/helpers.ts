@@ -23,8 +23,12 @@
     }
 
     export function clickElement(anyElement: HTMLElement | JQuery, ctrlKey?: boolean) {
+        return dispatchMouseEvent("click", anyElement, ctrlKey);
+    }
+
+    export function dispatchMouseEvent(type: string, anyElement: HTMLElement | JQuery, ctrlKey?: boolean) {
         var element = $(anyElement);
-        var event = getMouseEvent("click", {
+        var event = getMouseEvent(type, {
                 ctrlKey: ctrlKey,
                 clientX: element.offset().left + element.outerWidth() / 2,
                 clientY: element.offset().top + element.outerHeight() / 2
