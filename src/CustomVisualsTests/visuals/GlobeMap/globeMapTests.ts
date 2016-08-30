@@ -25,7 +25,7 @@ describe("GlobeMap", config.getSpecs(__dirname, (browser, reportUrl) => {
             expect(gl.drawingBufferWidth).toBeGreaterThan(100);
             expect(gl.drawingBufferHeight).toBeGreaterThan(100);
 
-            var size = {width: 50, height: 50 };
+            var size = { width: 50, height: 50 };
             var pixels = new Uint8Array(size.width * size.height * 4);
             gl.readPixels(
                 gl.drawingBufferWidth/2,
