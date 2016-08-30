@@ -63,7 +63,7 @@ function runTests(fileFilter) {
     return new Promise((done) => {
         var jasmine = require('jasmine-node');
 
-        jasmine.getEnv().defaultTimeoutInterval = 30000;
+        jasmine.getEnv().defaultTimeoutInterval = 15 * 60 * 1000;
         jasmine.executeSpecsInFolder({
             specFolders: [__dirname + "\\build\\CustomVisualsTests\\visuals\\"],
             onComplete: (runner, log) => {
