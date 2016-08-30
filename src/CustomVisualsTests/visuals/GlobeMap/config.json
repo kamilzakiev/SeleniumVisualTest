@@ -1,0 +1,13 @@
+{
+    "browsers": {
+        "internetExplorer": true,
+        "chrome": true,
+        "firefox": true,
+        "edge": false
+    },
+    "reports": {
+        "dxt": "",
+        "msit": "",
+        "prod": "https://app.powerbi.com/view?r=eyJrIjoiN2M1ZDRkYmYtYTNjYS00OGM3LWFiYWUtZGM2NWE2NzRkOTk5IiwidCI6IjM3MjQ4MTdmLTU1YzktNDEzOC05M2Y4LTg2N2EzNTAzYmYxMSIsImMiOjZ9"
+    }
+}
