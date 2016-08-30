@@ -5,6 +5,8 @@ var selenium = require('selenium-standalone');
 var selenium = require('selenium-standalone');
 var streamConsume = require('stream-consume');
 var mergeStream = require('merge-stream');
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync("config.json"));
 
 function build(name) {
     return new Promise((done, fail) => {
@@ -63,7 +65,7 @@ function runTests(fileFilter) {
     return new Promise((done) => {
         var jasmine = require('jasmine-node');
 
-        jasmine.getEnv().defaultTimeoutInterval = 15 * 60 * 1000;
+        jasmine.getEnv().defaultTimeoutInterval = config.defaultTimeoutInterval;
         jasmine.executeSpecsInFolder({
             specFolders: [__dirname + "\\build\\CustomVisualsTests\\visuals\\"],
             onComplete: (runner, log) => {
