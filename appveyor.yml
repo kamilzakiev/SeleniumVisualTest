@@ -26,7 +26,7 @@ test_script:
   # Output useful info for debugging.
   - node --version && npm --version
 
-  - node_modules\.bin\gulp build-install-run --file="(sanddance|globemap)"
+  - node_modules\.bin\gulp build-install-run --file=".*"
 
 # scripts to run after tests
 on_finish :
