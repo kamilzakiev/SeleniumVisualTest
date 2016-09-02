@@ -1,4 +1,4 @@
-import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule} from "../../_references";
+import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule, helpers} from "../../_references";
 
 describe("TornadoChart", visualConfig.getSpecs(__dirname, (browser, reportUrl) => {
     let client: WebdriverIO.Client<void>;
@@ -7,7 +7,7 @@ describe("TornadoChart", visualConfig.getSpecs(__dirname, (browser, reportUrl) =
     let itClient = clientModule.getItClient(() => client), xitClient = clientModule.getXitClient(() => client);
 
     beforeEach((done) => {
-        client = webdriverIOHelpers.getWebClient(browser);
+        client = webdriverIOHelpers.getWebdriverIOClient(browser);
         client
             .url(reportUrl)
             .waitForVisible("svg.tornado-chart g.columns > *")
@@ -18,6 +18,7 @@ describe("TornadoChart", visualConfig.getSpecs(__dirname, (browser, reportUrl) =
 
     itClient("selection test", function (done) {
         var visual = new clientVisuals.TornadoChart();
+
         clientHelpers.clickElement(visual.columns.eq(0));
         clientHelpers.clickElement(visual.columns.eq(1), true);
 
@@ -29,9 +30,7 @@ describe("TornadoChart", visualConfig.getSpecs(__dirname, (browser, reportUrl) =
             }
         });
 
-        setTimeout(() => {
-            expect(clientHelpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("82.40K");
-            done();
-        }, 500);
+        clientHelpers.waitUntil(() => clientHelpers.getTextWithoutChild($("svg.card > g > text.value")) === "82.40K")
+            .then(done);
     });
 }));

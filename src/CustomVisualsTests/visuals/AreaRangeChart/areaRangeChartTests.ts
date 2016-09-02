@@ -1,4 +1,4 @@
-import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule} from "../../_references";
+import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule, helpers} from "../../_references";
 
 xdescribe("AreaRangeChart", visualConfig.getSpecs(__dirname, (browser, reportUrl) => {
     let client: WebdriverIO.Client<void>;
@@ -7,7 +7,7 @@ xdescribe("AreaRangeChart", visualConfig.getSpecs(__dirname, (browser, reportUrl
     let itClient = clientModule.getItClient(() => client), xitClient = clientModule.getXitClient(() => client);
 
     beforeEach((done) => {
-        client = webdriverIOHelpers.getWebClient(browser);
+        client = webdriverIOHelpers.getWebdriverIOClient(browser);
         client
             .url(reportUrl)
             .waitForVisible("svg.areaRangeChart > g.chart > *")
@@ -28,10 +28,8 @@ xdescribe("AreaRangeChart", visualConfig.getSpecs(__dirname, (browser, reportUrl
                 expect(parseFloat(e.css('fill-opacity'))).toBe(1);
             }
         });
-        done();
-        setTimeout(() => {
-            expect(clientHelpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("299");
-            done();
-        }, 500);
+
+        clientHelpers.waitUntil(() => clientHelpers.getTextWithoutChild($("svg.card > g > text.value")) === "299")
+            .then(done);
     });
 }));

@@ -1,4 +1,4 @@
-import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule} from "../../_references";
+import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule, helpers} from "../../_references";
 
 describe("BulletChart", visualConfig.getSpecs(__dirname, (browser, reportUrl) => {
     let client: WebdriverIO.Client<void>;
@@ -7,7 +7,7 @@ describe("BulletChart", visualConfig.getSpecs(__dirname, (browser, reportUrl) =>
     let itClient = clientModule.getItClient(() => client), xitClient = clientModule.getXitClient(() => client);
 
     beforeEach((done) => {
-        client = webdriverIOHelpers.getWebClient(browser);
+        client = webdriverIOHelpers.getWebdriverIOClient(browser);
         client
             .url(reportUrl)
             .waitForVisible("div.bulletChart rect.range")
@@ -30,9 +30,7 @@ describe("BulletChart", visualConfig.getSpecs(__dirname, (browser, reportUrl) =>
             }
         });
 
-        setTimeout(() => {
-            expect(clientHelpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("222K");
-            done();
-        }, 500);
+        clientHelpers.waitUntil(() => clientHelpers.getTextWithoutChild($("svg.card > g > text.value")) === "222K")
+            .then(done);
     });
 }));

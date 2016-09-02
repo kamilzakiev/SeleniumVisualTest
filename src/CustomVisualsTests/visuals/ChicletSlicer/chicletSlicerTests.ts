@@ -1,4 +1,4 @@
-import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule} from "../../_references";
+import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule, helpers} from "../../_references";
 
 describe("ChicletSlicer", visualConfig.getSpecs(__dirname, (browser, reportUrl) => {
     let client: WebdriverIO.Client<void>;
@@ -7,7 +7,7 @@ describe("ChicletSlicer", visualConfig.getSpecs(__dirname, (browser, reportUrl) 
     let itClient = clientModule.getItClient(() => client), xitClient = clientModule.getXitClient(() => client);
 
     beforeEach((done) => {
-        client = webdriverIOHelpers.getWebClient(browser);
+        client = webdriverIOHelpers.getWebdriverIOClient(browser);
         client
             .url(reportUrl)
             .waitForVisible("div.chicletSlicer div.cell > *")
@@ -27,9 +27,7 @@ describe("ChicletSlicer", visualConfig.getSpecs(__dirname, (browser, reportUrl) 
             clientHelpers.assertColorsMatch(e.css('background-color'), unselectedColor, i < 2);
         });
 
-        setTimeout(() => {
-            expect(clientHelpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("$159M");
-            done();
-        }, 500);
+        clientHelpers.waitUntil(() => clientHelpers.getTextWithoutChild($("svg.card > g > text.value")) === "$159M")
+            .then(done);
     });
 }));

@@ -5,6 +5,7 @@ var selenium = require('selenium-standalone');
 var selenium = require('selenium-standalone');
 var streamConsume = require('stream-consume');
 var mergeStream = require('merge-stream');
+var jasmineReporters = require("jasmine-reporters");
 var fs = require('fs');
 var config = JSON.parse(fs.readFileSync("config.json"));
 
@@ -63,18 +64,24 @@ function runSeleniumServer() {
 
 function runTests(fileFilter) {
     return new Promise((done) => {
-        var jasmine = require('jasmine-node');
+        var jasmineNode = require('jasmine-node');
+        var jasmineConsoleReporter = require('jasmine-console-reporter');
 
-        jasmine.getEnv().defaultTimeoutInterval = config.defaultTimeoutInterval;
-        jasmine.executeSpecsInFolder({
+        var reporter = new jasmineConsoleReporter({
+            colors: 2,           // (0|false)|(1|true)|2 
+            cleanStack: true,       // (0|false)|(1|true)|2|3 
+            verbosity: 4,        // (0|false)|1|2|(3|true)|4 
+            listStyle: 'indent', // "flat"|"indent" 
+            activity: !require('is-appveyor')
+        });
+
+        jasmine.getEnv().addReporter(reporter);
+
+        jasmineNode.run({
             specFolders: [__dirname + "\\build\\CustomVisualsTests\\visuals\\"],
-            onComplete: (runner, log) => {
-                process.exit(runner.results().failedCount ? 1 : 0);
-                done();
-            },
-            isVerbose: true,
-            showColors: true,
-            regExpSpec: new RegExp(fileFilter, "i")
+            forceExit: true,
+            match: fileFilter,
+            captureExceptions: true
         });
     });
 }

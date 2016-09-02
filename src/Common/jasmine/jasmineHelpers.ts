@@ -2,7 +2,7 @@
 
 export module jasmineHelpers {
     export function getDefaultTimeoutInterval(): number {
-        return (<any>jasmine.getEnv()).defaultTimeoutInterval;
+        return jasmine.DEFAULT_TIMEOUT_INTERVAL;
     }
 
     export function getJasmineCoreJs() {

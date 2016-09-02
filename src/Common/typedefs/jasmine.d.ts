@@ -1,39 +1,46 @@
 // Type definitions for Jasmine 2.2
 // Project: http://jasmine.github.io/
 // Definitions by: Boris Yankov <https://github.com/borisyankov/>, Theodore Brown <https://github.com/theodorejb>, David Pärsson <https://github.com/davidparsson/>
-// Definitions: https://github.com/borisyankov/DefinitelyTyped
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 
-// For ddescribe / iit use : https://github.com/borisyankov/DefinitelyTyped/blob/master/karma-jasmine/karma-jasmine.d.ts
+// For ddescribe / iit use : https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/karma-jasmine/karma-jasmine.d.ts
 
 declare function describe(description: string, specDefinitions: () => void): void;
 declare function fdescribe(description: string, specDefinitions: () => void): void;
 declare function xdescribe(description: string, specDefinitions: () => void): void;
 
 declare function it(expectation: string, assertion?: () => void, timeout?: number): void;
-declare function it(expectation: string, assertion?: (done: () => void) => void, timeout?: number): void;
+declare function it(expectation: string, assertion?: (done: DoneFn) => void, timeout?: number): void;
 declare function fit(expectation: string, assertion?: () => void, timeout?: number): void;
-declare function fit(expectation: string, assertion?: (done: () => void) => void, timeout?: number): void;
+declare function fit(expectation: string, assertion?: (done: DoneFn) => void, timeout?: number): void;
 declare function xit(expectation: string, assertion?: () => void, timeout?: number): void;
-declare function xit(expectation: string, assertion?: (done: () => void) => void, timeout?: number): void;
+declare function xit(expectation: string, assertion?: (done: DoneFn) => void, timeout?: number): void;
 
 /** If you call the function pending anywhere in the spec body, no matter the expectations, the spec will be marked pending. */
 declare function pending(reason?: string): void;
 
 declare function beforeEach(action: () => void, timeout?: number): void;
-declare function beforeEach(action: (done: () => void) => void, timeout?: number): void;
+declare function beforeEach(action: (done: DoneFn) => void, timeout?: number): void;
 declare function afterEach(action: () => void, timeout?: number): void;
-declare function afterEach(action: (done: () => void) => void, timeout?: number): void;
+declare function afterEach(action: (done: DoneFn) => void, timeout?: number): void;
 
-/*declare function beforeAll(action: () => void, timeout?: number): void;
-declare function beforeAll(action: (done: () => void) => void, timeout?: number): void;
+declare function beforeAll(action: () => void, timeout?: number): void;
+declare function beforeAll(action: (done: DoneFn) => void, timeout?: number): void;
 declare function afterAll(action: () => void, timeout?: number): void;
-declare function afterAll(action: (done: () => void) => void, timeout?: number): void;*/
+declare function afterAll(action: (done: DoneFn) => void, timeout?: number): void;
 
 declare function expect(spy: Function): jasmine.Matchers;
 declare function expect(actual: any): jasmine.Matchers;
 
 declare function fail(e?: any): void;
+/** Action method that should be called when the async work is complete */
+interface DoneFn extends Function {
+    (): void;
+
+    /** fails the spec and indicates that it has completed. If the message is an Error, Error.message is used */
+    fail: (message?: Error|string) => void;
+}
 
 declare function spyOn(object: any, method: string): jasmine.Spy;
 
@@ -41,7 +48,7 @@ declare function runs(asyncMethod: Function): void;
 declare function waitsFor(latchMethod: () => boolean, failureMessage?: string, timeout?: number): void;
 declare function waits(timeout?: number): void;
 
-declare module jasmine {
+declare namespace jasmine {
 
     var clock: () => Clock;
 
@@ -115,8 +122,8 @@ declare module jasmine {
     }
 
     interface CustomMatcher {
-        compare<T>(actual: T, expected: T, failureMessage?: string): CustomMatcherResult;
-        compare(actual: any, expected: any, failureMessage?: string): CustomMatcherResult;
+        compare<T>(actual: T, expected: T): CustomMatcherResult;
+        compare(actual: any, expected: any): CustomMatcherResult;
     }
 
     interface CustomMatcherFactory {
@@ -145,7 +152,8 @@ declare module jasmine {
         clearInterval: void;
         updateInterval: number;
 
-        currentSpec: Spec;
+        topSuite(): Suite;
+        //currentSpec: Spec;
 
         matchersClass: Matchers;
 
@@ -157,10 +165,9 @@ declare module jasmine {
         describe(description: string, specDefinitions: () => void): Suite;
         // ddescribe(description: string, specDefinitions: () => void): Suite; Not a part of jasmine. Angular team adds these
         beforeEach(beforeEachFunction: () => void): void;
-        //beforeAll(beforeAllFunction: () => void): void;
-        currentRunner(): Runner;
+        beforeAll(beforeAllFunction: () => void): void;
         afterEach(afterEachFunction: () => void): void;
-        //afterAll(afterAllFunction: () => void): void;
+        afterAll(afterAllFunction: () => void): void;
         xdescribe(desc: string, specDefinitions: () => void): XSuite;
         it(description: string, func: () => void): Spec;
         // iit(description: string, func: () => void): Spec; Not a part of jasmine. Angular team adds these
@@ -172,6 +179,7 @@ declare module jasmine {
         addCustomEqualityTester(equalityTester: CustomEqualityTester): void;
         addMatchers(matchers: CustomMatcherFactories): void;
         specFilter(spec: Spec): boolean;
+        throwOnExpectationFailure(value: boolean): void;
     }
 
     interface FakeTimer {
@@ -212,12 +220,12 @@ declare module jasmine {
         passed(): boolean;
     }
 
-    interface MessageResult extends Result {
+    interface MessageResult extends Result  {
         values: any;
         trace: Trace;
     }
 
-    interface ExpectationResult extends Result {
+    interface ExpectationResult extends Result  {
         matcherName: string;
         passed(): boolean;
         expected: any;
@@ -294,22 +302,20 @@ declare module jasmine {
         toContain(expected: any, expectationFailOutput?: any): boolean;
         toBeLessThan(expected: number, expectationFailOutput?: any): boolean;
         toBeGreaterThan(expected: number, expectationFailOutput?: any): boolean;
-        toBeCloseTo(expected: number, precision: any, expectationFailOutput?: any): boolean;
+        toBeCloseTo(expected: number, precision?: any, expectationFailOutput?: any): boolean;
         toThrow(expected?: any): boolean;
         toThrowError(message?: string | RegExp): boolean;
-        toThrowError(expected?: Error, message?: string | RegExp): boolean;
+        toThrowError(expected?: new (...args: any[]) => Error, message?: string | RegExp): boolean;
         not: Matchers;
 
         Any: Any;
     }
 
     interface Reporter {
-        reportRunnerStarting(runner: Runner): void;
-        reportRunnerResults(runner: Runner): void;
-        reportSuiteResults(suite: Suite): void;
-        reportSpecStarting(spec: Spec): void;
-        reportSpecResults(spec: Spec): void;
-        log(str: string): void;
+        jasmineStarted?(runner: Runner): void;
+        jasmineDone?(suite: Suite): void;
+        specStarted?(spec: Spec): void;
+        specDone?(spec: Spec): void;
     }
 
     interface MultiReporter extends Reporter {
@@ -323,8 +329,8 @@ declare module jasmine {
         execute(): void;
         beforeEach(beforeEachFunction: SpecFunction): void;
         afterEach(afterEachFunction: SpecFunction): void;
-        //beforeAll(beforeAllFunction: SpecFunction): void;
-        //afterAll(afterAllFunction: SpecFunction): void;
+        beforeAll(beforeAllFunction: SpecFunction): void;
+        afterAll(afterAllFunction: SpecFunction): void;
         finishCallback(): void;
         addSuite(suite: Suite): void;
         add(block: Block): void;
@@ -346,37 +352,9 @@ declare module jasmine {
     }
 
     interface Spec extends SuiteOrSpec {
-
-        new (env: Env, suite: Suite, description: string): any;
-
-        suite: Suite;
-
-        afterCallbacks: SpecFunction[];
-        spies_: Spy[];
-
-        results_: NestedResults;
-        matchersClass: Matchers;
-
-        getFullName(): string;
-        results(): NestedResults;
-        log(arguments: any): any;
-        runs(func: SpecFunction): Spec;
-        addToQueue(block: Block): void;
-        addMatcherResult(result: Result): void;
-        expect(actual: any): any;
-        waits(timeout: number): Spec;
-        waitsFor(latchFunction: SpecFunction, timeoutMessage?: string, timeout?: number): Spec;
-        fail(e?: any): void;
-        getMatchersClass_(): Matchers;
-        addMatchers(matchersPrototype: CustomMatcherFactories): void;
-        finishCallback(): void;
-        finish(onComplete?: () => void): void;
-        after(doAfter: SpecFunction): void;
-        execute(onComplete?: () => void): any;
-        addBeforesAndAftersToQueue(): void;
-        explodes(): void;
-        spyOn(obj: any, methodName: string, ignoreMethodDoesntExist: boolean): Spy;
-        removeAllSpies(): void;
+        fullName: string;
+        failedExpectations: any[];
+        passedExpectations: any[];
     }
 
     interface XSpec {
@@ -394,8 +372,8 @@ declare module jasmine {
         finish(onComplete?: () => void): void;
         beforeEach(beforeEachFunction: SpecFunction): void;
         afterEach(afterEachFunction: SpecFunction): void;
-        //beforeAll(beforeAllFunction: SpecFunction): void;
-        //afterAll(afterAllFunction: SpecFunction): void;
+        beforeAll(beforeAllFunction: SpecFunction): void;
+        afterAll(afterAllFunction: SpecFunction): void;
         results(): NestedResults;
         add(suiteOrSpec: SuiteOrSpec): void;
         specs(): Spec[];
@@ -424,6 +402,8 @@ declare module jasmine {
         callThrough(): Spy;
         /** By chaining the spy with and.returnValue, all calls to the function will return a specific value. */
         returnValue(val: any): Spy;
+        /** By chaining the spy with and.returnValues, all calls to the function will return specific values in order until it reaches the end of the return values list. */
+        returnValues(...values: any[]): Spy;
         /** By chaining the spy with and.callFake, all calls to the spy will delegate to the supplied function. */
         callFake(fn: Function): Spy;
         /** By chaining the spy with and.throwError, all calls to the spy will throw the specified value. */
@@ -456,7 +436,7 @@ declare module jasmine {
         object: any;
         /** All arguments passed to the call */
         args: any[];
-        /** Return value of the call */
+        /** The return value of the call */
         returnValue: any;
     }
 

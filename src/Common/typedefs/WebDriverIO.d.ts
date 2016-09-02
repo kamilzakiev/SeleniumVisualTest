@@ -1034,6 +1034,8 @@ declare namespace WebdriverIO {
             callback: (err: any) => P
         ): Client<P>;
 
+        windowHandleSize(viewport: { width: number, height: number}): Client<void>
+
         switchTab(windowHandle?: string): Client<void>;
         switchTab<P>(
             callback: (err: any) => P

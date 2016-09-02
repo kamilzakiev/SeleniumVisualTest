@@ -1,4 +1,4 @@
-import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule} from "../../_references";
+import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule, helpers} from "../../_references";
 
 describe("Gantt", visualConfig.getSpecs(__dirname, (browser, reportUrl) => {
     let client: WebdriverIO.Client<void>;
@@ -7,7 +7,7 @@ describe("Gantt", visualConfig.getSpecs(__dirname, (browser, reportUrl) => {
     let itClient = clientModule.getItClient(() => client), xitClient = clientModule.getXitClient(() => client);
     
     beforeEach((done) => {
-        client = webdriverIOHelpers.getWebClient(browser);
+        client = webdriverIOHelpers.getWebdriverIOClient(browser);
         client
             .url(reportUrl)
             .waitForVisible("div.gantt-body g.task-group > g.task > *")
@@ -29,9 +29,7 @@ describe("Gantt", visualConfig.getSpecs(__dirname, (browser, reportUrl) => {
             }
         });
 
-        setTimeout(() => {
-            expect(clientHelpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("9");
-            done();
-        }, 500);
+        clientHelpers.waitUntil(() => clientHelpers.getTextWithoutChild($("svg.card > g > text.value")) === "9")
+            .then(done);
     });
 }));

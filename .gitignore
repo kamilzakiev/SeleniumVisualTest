@@ -19,3 +19,5 @@
 /node_modules
 /src/.vs
 /*debug.log
+/image_comparison/**/*.png
+!/image_comparison/**/*.baseline.png

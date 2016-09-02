@@ -1,4 +1,4 @@
-import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule} from "../../_references";
+import {WebdriverIO, webdriverIOHelpers, visualConfig, webdriverIOClientModule, helpers} from "../../_references";
 
 describe("DotPlot", visualConfig.getSpecs(__dirname, (browser, reportUrl) => {
     let client: WebdriverIO.Client<void>;
@@ -7,7 +7,7 @@ describe("DotPlot", visualConfig.getSpecs(__dirname, (browser, reportUrl) => {
     let itClient = clientModule.getItClient(() => client), xitClient = clientModule.getXitClient(() => client);
 
     beforeEach((done) => {
-        client = webdriverIOHelpers.getWebClient(browser);
+        client = webdriverIOHelpers.getWebdriverIOClient(browser);
         client
             .url(reportUrl)
             .waitForVisible("svg.dotplot g.dotplotGroup > *")
@@ -29,9 +29,7 @@ describe("DotPlot", visualConfig.getSpecs(__dirname, (browser, reportUrl) => {
             }
         });
 
-        setTimeout(() => {
-            expect(clientHelpers.getTextWithoutChild($("svg.card > g > text.value"))).toBe("$152K");
-            done();
-        }, 500);
+        clientHelpers.waitUntil(() => clientHelpers.getTextWithoutChild($("svg.card > g > text.value")) === "$152K")
+            .then(done);
     });
 }));

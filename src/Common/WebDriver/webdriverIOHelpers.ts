@@ -13,18 +13,28 @@ export module webdriverIOHelpers {
             return client;
         };
 
-        let runner = jasmine.getEnv().currentRunner();
-        let finishCallback = runner.finishCallback;
-
-        runner.finishCallback = function() {
-            let finishCallbackArgs = arguments;
-            Q.allSettled(clients.map(c =>  c.endAll())).finally(() => {
-                if(finishCallback) {
-                    finishCallback.apply(this, finishCallbackArgs);
-                }
-            });
-        };
+        jasmine.getEnv().addReporter({
+            //jasmineStarted: () => {},
+            jasmineDone: () => {
+                Q.allSettled(clients.map(c =>  c.endAll()));
+            }
+        });
     })();
+
+    export function getWebdriverIOClient(browser: webdriverIOHelpers.Browser) {
+        let timeout = jasmineHelpers.getDefaultTimeoutInterval();
+        let client = WebdriverIO
+            .remote({ desiredCapabilities: { browserName: browser }, waitforTimeout: timeout });
+
+        return client
+            .init()
+            .windowHandleSize({width: 1920, height: 1080})
+            .timeouts("script", timeout)
+            .timeouts("page load", timeout)
+            .timeouts("implicit", timeout)
+            .timeoutsAsyncScript(timeout)
+            .timeoutsImplicitWait(timeout);
+    }
 
     export enum Browser {
         chrome = <any>"chrome",
@@ -90,20 +100,4 @@ export module webdriverIOHelpers {
         export const META = "\uE03D";
         export const COMMAND = "\uE03D"
     }
-
-    export function getWebClient(browser: Browser) {
-        let timeout = jasmineHelpers.getDefaultTimeoutInterval();
-
-        let client = WebdriverIO.remote({ desiredCapabilities: { browserName: browser }, waitforTimeout: timeout })
-            .init()
-            .timeouts("script", timeout)
-            .timeouts("page load", timeout)
-            .timeouts("implicit", timeout)
-            .timeoutsAsyncScript(timeout)
-            .timeoutsImplicitWait(timeout);
-
-        return client;
-    }
 }
-
-

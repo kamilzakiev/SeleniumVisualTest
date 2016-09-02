@@ -43,4 +43,24 @@
     export function getTextWithoutChild(anyElement: HTMLElement | JQuery) {
         return $(anyElement)[0].childNodes[0].textContent;
     }
+    
+    export function waitUntil(condition: () => boolean, timeoutMs?: number, interval: number = 100) {
+        var deffered = $.Deferred();
+        var startTime = Date.now();
+
+        function conditionTest() {
+            if(condition()) {
+                deffered.resolve();
+            } else {
+                if(timeoutMs > 0 && Date.now() - startTime > timeoutMs) {
+                    deffered.rejectWith("timeout");
+                } else {
+                    setTimeout(conditionTest, interval);
+                }
+            }
+        }
+
+        conditionTest();
+        return deffered;
+    }
 }

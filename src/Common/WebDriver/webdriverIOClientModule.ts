@@ -1,8 +1,15 @@
 ﻿import * as fs from "fs";
 import {jasmineHelpers} from "../jasmine/jasmineHelpers";
-import * as path from 'path';
+import * as path from "path";
 
 export class webdriverIOClientModule {
+    static init = (function() {
+        jasmine.getEnv().addReporter({
+            specStarted: (spec) => webdriverIOClientModule.currentSpec = spec
+        });
+    })();
+    static currentSpec: jasmine.Spec;
+
     private modules: string[];
     private loadedModules: string;
     private specInitFunction: () => void;
@@ -24,6 +31,7 @@ export class webdriverIOClientModule {
     }
 
     public execSpec<T>(assertion: (done: () => void) => void | (() => void), timeout?: number) {
+        let currentSpecName = webdriverIOClientModule.currentSpec.fullName;
         return this.getFunctionForClient(client => {
             return client
                 .execute("return window.jasmineRequire").then(jasmineRequire => {
@@ -40,18 +48,14 @@ export class webdriverIOClientModule {
                     this.specInitFunction ? this.specInitFunction.toString() : "",
                     assertion.toString(),
                     timeout,
-                    jasmine.getEnv().currentSpec.getFullName(),
+                    currentSpecName,
                     this.getLoadedModules())
                 .then((result: any) => {
                     try {
                         let specExecutionResult = <SpecExecutionResult>JSON.parse(result.value);//parse results
 
-                        let failedExpectations = this.getFailedExpectations(specExecutionResult);
-
-                        failedExpectations.forEach(e => {
-                            jasmine.getEnv().currentSpec.addMatcherResult(e);
-                        });
-
+                        specExecutionResult.failedExpectations.forEach(e => webdriverIOClientModule.currentSpec.failedExpectations.push(e));
+                        specExecutionResult.passedExpectations.forEach(e => webdriverIOClientModule.currentSpec.passedExpectations.push(e));
                         specExecutionResult.consoleMessages.forEach(m => {
                             m.message = getCurrentSpecText(m.message, true);
                             switch(m.type) {
@@ -69,7 +73,7 @@ export class webdriverIOClientModule {
             });
 
         function getCurrentSpecText(text: string, isClient?: boolean) {
-            return `${jasmine.getEnv().currentSpec.getFullName()}${isClient ? " (client)" : ""}: ${text}`
+            return `${currentSpecName}${isClient ? " (client)" : ""}: ${text}`;
         }
     }
 
@@ -88,30 +92,9 @@ export class webdriverIOClientModule {
              method(expectation, done => getClient().call(this.execSpec(assertion, timeout)).then(() => done()), timeout);
     }
 
-    private getFailedExpectations(specExecutionResult: SpecExecutionResult) {
-        return specExecutionResult.failedExpectations.map(e => {
-                let result: jasmine.ExpectationResult = {
-                    type: e.type,
-                    matcherName: e.matcherName,
-                    passed: () => e.passed,
-                    expected: e.expected,
-                    actual: e.actual,
-                    message: e.message,
-                    trace: <jasmine.Trace>{
-                        name: e.matcherName,
-                        message: e.message,
-                        stack: e.stack
-                    }
-                };
-                (<any>result).passed_ = e.passed;
-
-                return result;
-            });
-    }
-
     private addSpec() {
         return function(specInitFunction: string, assertion: string, timeout: number, name: string, clientModules: string, testExecuted: (result: any) => void) {
-            var specExecutionResult = <SpecExecutionResult>{ failedExpectations: [], consoleMessages: [] };
+            var specExecutionResult = <SpecExecutionResult>{ consoleMessages: [] };
             var consoleFnNames = ["log", "error", "warn"];
             var consoleFunctions = consoleFnNames.map(n => <Function>window.console[n]);
 
@@ -120,17 +103,18 @@ export class webdriverIOClientModule {
                 return consoleFunctions[i].apply(window.console, arguments);
             });
 
-            jasmine.getEnv().addReporter(<any>{
+            jasmine.getEnv().addReporter({
                 jasmineStarted: function() {},
                 jasmineDone: function() {
                     consoleFnNames.forEach((type, i) => window.console[type] = consoleFunctions[i]);
-
-                    specExecutionResult.failedExpectations = (<any>jasmine.getEnv())
+                    var result = jasmine.getEnv()
                         .topSuite()
                         .children[0]
                         .children[0]
-                        .result
-                        .failedExpectations;
+                        .result;
+
+                    specExecutionResult.failedExpectations = result.failedExpectations
+                    specExecutionResult.passedExpectations = result.passedExpectations
 
                     testExecuted(JSON.stringify(specExecutionResult));
                 }
@@ -193,6 +177,7 @@ export class webdriverIOClientModule {
 }
 
 interface SpecExecutionResult {
-    failedExpectations: any[];
+    failedExpectations?: any[];
+    passedExpectations?: any[];
     consoleMessages: ({ type: string, message: string })[];
 }
