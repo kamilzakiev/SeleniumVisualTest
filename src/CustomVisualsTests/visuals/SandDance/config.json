@@ -1,7 +1,7 @@
 {
     "browsers": {
         "internetExplorer": true,
-        "chrome": true,
+        "chrome": false,
         "firefox": true,
         "edge": false
     },

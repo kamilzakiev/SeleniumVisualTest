@@ -1,8 +1,8 @@
 {
     "browsers": {
-        "internetExplorer": true,
-        "chrome": true,
-        "firefox": true,
+        "internetExplorer": false,
+        "chrome": false,
+        "firefox": false,
         "edge": false
     },
     "reports": {
