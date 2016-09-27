@@ -22,6 +22,7 @@
 
         public get dots() {
             return this.line
+                .children("g.dot-points")
                 .children("circle.point");
         }
 	}
