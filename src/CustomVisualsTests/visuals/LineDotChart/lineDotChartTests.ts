@@ -10,7 +10,7 @@ describe("LineDotChart", visualConfig.getSpecs(__dirname, (browser, reportUrl) =
         client = webdriverIOHelpers.getWebdriverIOClient(browser);
         client
             .url(reportUrl)
-            .waitForVisible("svg.lineDotChart g.line > circle.point")
+            .waitForVisible("svg.lineDotChart g.line circle.point")
             .then(() => done());
     });
 
@@ -20,13 +20,15 @@ describe("LineDotChart", visualConfig.getSpecs(__dirname, (browser, reportUrl) =
         var visual = new clientVisuals.LineDotChart();
         clientHelpers.clickElement(visual.dots.eq(0));
 
-        visual.dots.toArray().map($).forEach((e,i) => {
-            if(i >= 1) {
-                expect(e).not.toHaveClass("point_selected");
-            } else {
-                expect(e).toHaveClass("point_selected");
-            }
-        });
+        setTimeout(() => {
+            visual.dots.toArray().map($).forEach((e,i) => {
+                if(i >= 1) {
+                    expect(e).not.toHaveCss({"opacity":"1"});
+                } else {
+                    expect(e).toHaveCss({"opacity":"1"});
+                }
+            });
+        }, 5000);
 
         clientHelpers.waitUntil(() => clientHelpers.getTextWithoutChild($("svg.card > g > text.value")) === "1")
             .then(done);
