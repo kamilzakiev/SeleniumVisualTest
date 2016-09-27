@@ -67,15 +67,25 @@ function runTests(fileFilter) {
         var jasmineNode = require('jasmine-node');
         var jasmineConsoleReporter = require('jasmine-console-reporter');
 
-        var reporter = new jasmineConsoleReporter({
+        // is used only to handle stopping selenium server
+        var emptyReporter = {            
+            jasmineDone: function () {
+                if (selenium.child) {
+                    selenium.child.kill();
+                }
+                done();
+            }
+        }
+        jasmine.getEnv().addReporter(emptyReporter);
+
+        var mainReporter = new jasmineConsoleReporter({
             colors: 2,           // (0|false)|(1|true)|2 
             cleanStack: true,       // (0|false)|(1|true)|2|3 
             verbosity: 4,        // (0|false)|1|2|(3|true)|4 
             listStyle: 'indent', // "flat"|"indent" 
             activity: !require('is-appveyor')
         });
-
-        jasmine.getEnv().addReporter(reporter);
+        jasmine.getEnv().addReporter(mainReporter);
 
         jasmineNode.run({
             specFolders: [__dirname + "\\build\\CustomVisualsTests\\visuals\\"],
