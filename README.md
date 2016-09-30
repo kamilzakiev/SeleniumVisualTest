@@ -19,8 +19,14 @@ gulp build
 gulp install-start-selenium
 // run tests
 gulp run
+
+// or
+
 // build and run tests (selenium server should be installed and run)
 gulp build-run
+
+// or
+
 // build the project, install and start Selenium server, run tests
 gulp build-install-run
 ```
