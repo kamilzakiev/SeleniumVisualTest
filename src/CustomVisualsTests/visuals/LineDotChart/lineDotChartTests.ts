@@ -28,9 +28,9 @@ describe("LineDotChart", visualConfig.getSpecs(__dirname, (browser, reportUrl) =
                     expect(e).toHaveCss({"opacity":"1"});
                 }
             });
-        }, 5000);
-
-        clientHelpers.waitUntil(() => clientHelpers.getTextWithoutChild($("svg.card > g > text.value")) === "1")
+            clientHelpers.waitUntil(() => clientHelpers.getTextWithoutChild($("svg.card > g > text.value")) === "1")
             .then(done);
+        }, 5000);
+        
     });
 }));
