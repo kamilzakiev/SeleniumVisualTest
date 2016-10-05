@@ -83,7 +83,7 @@ function runTests(fileFilter) {
             cleanStack: true,       // (0|false)|(1|true)|2|3 
             verbosity: 4,        // (0|false)|1|2|(3|true)|4 
             listStyle: 'indent', // "flat"|"indent" 
-            activity: !require('is-appveyor')
+            activity: false
         });
         jasmine.getEnv().addReporter(mainReporter);
 

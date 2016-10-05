@@ -37,7 +37,7 @@
     }
 
     export function getVisualsRootElements() {
-        return $("div.vcBody > div.visual");
+        return $("div.vcBody > div.visual, html > body.visual-sandbox");
     }
 
     export function getTextWithoutChild(anyElement: HTMLElement | JQuery) {
