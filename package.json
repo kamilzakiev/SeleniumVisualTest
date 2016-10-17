@@ -16,7 +16,7 @@
     "run-sequence": "^1.2.2",
     "merge-stream": "1.0.0",
     "stream-consume": "0.1.0",
-    "selenium-standalone": "5.6.2",
+    "selenium-standalone": "latest",
     "webdriverio": "4.2.7",
     "is-appveyor": "1.0.0",
     "jasmine-core": "2.5.0",
