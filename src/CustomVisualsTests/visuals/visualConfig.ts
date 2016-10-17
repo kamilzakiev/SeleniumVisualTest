@@ -58,11 +58,12 @@ export module visualConfig {
                 .map(key => {
                     switch(key) {
                         case "chrome": return Browser.chrome;
-                        case "firefox": return Browser.firefox;
+                        //case "firefox": return Browser.firefox;
                         case "internetExplorer": return Browser.internetExplorer;
                         //case "edge": return references.WebDriverIOHelper.Browser.edge;
                     }
-                });
+                })
+                .filter(x => !!x);
         }
     }
 }
